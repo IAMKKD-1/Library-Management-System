@@ -57,20 +57,8 @@ class Library():
             print('book is already issued')
 
 
-class Addbook:
-    def he(self):
-        self.bookId = self.random4digit(4)
-        self.bookTitle = input("Enter the Book Title: ")
-        self.author = input("Enter the Authors name: ")
-        self.pages = input("Enter No. of pages: ")
-        self.noOfCopies = input("Enter No. of copies: ")
-        self.isbn = input("Enter 13 digit ISBN Code: ")
-        self.publishedYear = input("Enter Published Year: ")
-        self.books.append(
-            [self.bookId, self.bookTitle, self.author, self.pages, self.noOfCopies, self.isbn, self.publishedYear])
 
-
-class Admin(Library, User, Addbook):
+class Admin(Library, User):
     admin = [['Username', 'Email', 'Password']]
     counter = 0
 
@@ -129,3 +117,13 @@ class Admin(Library, User, Addbook):
                 print("No Worries!")
         else:
             print("Please Login first.")
+
+    def addBooks(self):
+        self.bookId = self.random4digit(4)
+        self.bookTitle = input("Enter the Book Title: ")
+        self.author = input("Enter the Authors name: ")
+        self.pages = input("Enter No. of pages: ")
+        self.noOfCopies = input("Enter No. of copies: ")
+        self.isbn = input("Enter 13 digit ISBN Code: ")
+        self.publishedYear = input("Enter Published Year: ")
+        self.books.append([self.bookId, self.bookTitle, self.author, self.pages, self.noOfCopies, self.isbn, self.publishedYear])
