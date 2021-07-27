@@ -88,15 +88,18 @@ class Library():
         print('Congratulations! You are an Admin now.')
 
     def display_admins(self):
+        adminlistindb = [['Name', 'Email', 'Password', 'Role']]
         for i in range(1, len(self.users)):
             if self.users[i][3] == "Admin":
-                adminlistindb = self.users[i]
+                adminlistindb.append(self.users[i])
         print(tabulate(adminlistindb, headers='firstrow', tablefmt='fancy_grid'))
 
     def display_users(self):
+        userlistindb = [['Name', 'Email', 'Password', 'Role']]
         for i in range(1, len(self.users)):
-            if self.users[i][3] == "Admin":
-                userlistindb = self.users[i]
+            if self.users[i][3] == "Borrower":
+                userlistindb.append(self.users[i])
+
         print(tabulate(userlistindb, headers='firstrow', tablefmt='fancy_grid'))
 
     def makeAdmin(self):
@@ -112,6 +115,21 @@ class Library():
                     self.users.append([self.name, self.email, self.password, self.role])
                 else:
                     print("No Worries!")
+                break
+            else:
+                print("Please login first.")
+
+    def makeBorrower(self):
+        for i in range(1, len(self.users)):
+            if self.users[i][3] == "Admin":
+                self.name = input("Enter Full Name: ")
+                self.age = input("Enter Date of Birth: ")
+                self.contact = input("Enter Contact no.: ")
+                self.email = input("Enter Email: ")
+                self.password = input("Enter Password: ")
+                self.role = 'Borrower'
+                self.users.append([self.name, self.email, self.password, self.role])
+                print('User Registered Successfully')
                 break
             else:
                 print("Please login first.")
@@ -143,13 +161,17 @@ class Library():
                         time.sleep(1)
                         resp = input("Do you want to borrow this book? Y/N: ")
                         if resp.lower() == 'y':
-                            if self.books[i][4] > 0:
+                            if self.books[j][4] > 0:
                                 print("Book Issued!")
+                                self.books[j][4] -= 1
                             else:
                                 print("Book Out of Stock!")
                         else:
                             print("No Worries! Come again.")
-                    else:
-                        print('Book not found!')
+                        break
+                else:
+                    print('Book not found!')
+                break
         else:
             print("Please Login First.")
+
