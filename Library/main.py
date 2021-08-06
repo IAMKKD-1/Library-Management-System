@@ -153,8 +153,14 @@ class Library():
         self.email = input("Enter your Email: ")
         self.password = input("Enter your Password: ")
         self.role = 'Borrower'
-        self.users.append([self.name, self.email, self.password, self.role])
-        print('User Registered Successfully')
+        for i in range(len(self.users)):
+            if self.email in self.users[i]:
+                print(" ")
+                print("User Already Registered")
+                break
+        else:
+            self.users.append([self.name, self.email, self.password, self.role])
+            print('User Registered Successfully')
 
     counter1 = 0
 
@@ -188,8 +194,14 @@ class Library():
         self.username = input("Enter your Userame: ")
         self.email = input("Enter your Email: ")
         self.password = input("Enter your Password: ")
-        self.users.append([self.username, self.email, self.password, self.role])
-        print('Congratulations! You are an Admin now.')
+        for i in range(len(self.users)):
+            if self.email in self.users[i]:
+                print(" ")
+                print("Admin Already Registered")
+                break
+        else:
+            self.users.append([self.username, self.email, self.password, self.role])
+            print('Congratulations! You are an Admin now.')
 
     def display_admins(self):
         if self.active_user[1][2] == "Admin":
@@ -410,6 +422,5 @@ class Library():
                     print("Book not found in User's history!")
         else:
             print("Please Login first!")
-
 
 a= Library()
