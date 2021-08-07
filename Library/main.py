@@ -1,6 +1,7 @@
 from tabulate import tabulate
 from random import randint
 import copy
+from datetime import timedelta, date
 
 
 class Library():
@@ -133,6 +134,10 @@ class Library():
         range_end = (10 ** n) - 1
         return randint(range_start, range_end)
 
+    def currentdate(self):
+        Date_req = date.today()
+        return Date_req
+
     users = [['Name', 'Email', 'Password', 'Role'], ['Admin', 'admin', 'admin', 'Admin']]
     books = [['BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year'],
              [random4digit(4), 'Rich Dad, Poor Dad', 'Robert Kiyosaki', 336, 5, random4digit(13), 2000],
@@ -141,7 +146,8 @@ class Library():
              [random4digit(4), 'The Odyssey', 'Homer', 384, 6, random4digit(13), 1614],
              [random4digit(4), "Gulliver's Travels", 'Jonathan Swift', 350, 2, random4digit(13), 1726],
              [random4digit(4), 'Jyotipunj', 'Narendra Modi', 200, 9, random4digit(13), 2009]]
-    books_history = [['Email', 'BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year']]
+    books_history = [['Email', 'BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year',
+                      'Date of Issue']]
     removedBooks = [['BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year']]
 
     active_user = [['Email', 'Password', 'Role'], ['Email', 'Password', 'Role']]
@@ -156,7 +162,7 @@ class Library():
         for i in range(len(self.users)):
             if self.email in self.users[i]:
                 print(" ")
-                print("User Already Registered")
+                print("User Already Exists")
                 break
         else:
             self.users.append([self.name, self.email, self.password, self.role])
@@ -197,7 +203,7 @@ class Library():
         for i in range(len(self.users)):
             if self.email in self.users[i]:
                 print(" ")
-                print("Admin Already Registered")
+                print("Admin Already Exists")
                 break
         else:
             self.users.append([self.username, self.email, self.password, self.role])
@@ -235,12 +241,18 @@ class Library():
             self.email = input("Enter the Email: ")
             self.password = input("Enter password: ")
             self.role = 'Admin'
-            self.counter2 = input("Do you want to give {0} Admin privilege? Y/N: ".format(self.name))
-            if self.counter2 == 'Y' or self.counter2 == 'y':
-                print("{0} has been given Admin rights.".format(self.name))
-                self.users.append([self.name, self.email, self.password, self.role])
+            for i in range(len(self.users)):
+                if self.email in self.users[i]:
+                    print(" ")
+                    print("Admin Already Exists")
+                    break
             else:
-                print("No Worries!")
+                self.counter2 = input("Do you want to give {0} Admin privilege? Y/N: ".format(self.name))
+                if self.counter2 == 'Y' or self.counter2 == 'y':
+                    print("{0} has been given Admin rights.".format(self.name))
+                    self.users.append([self.name, self.email, self.password, self.role])
+                else:
+                    print("No Worries!")
         else:
             print("Please login first.")
 
@@ -252,8 +264,14 @@ class Library():
             self.email = input("Enter Email: ")
             self.password = input("Enter Password: ")
             self.role = 'Borrower'
-            self.users.append([self.name, self.email, self.password, self.role])
-            print('User Registered Successfully')
+            for i in range(len(self.users)):
+                if self.email in self.users[i]:
+                    print(" ")
+                    print("User Already Exists")
+                    break
+            else:
+                self.users.append([self.name, self.email, self.password, self.role])
+                print('User Registered Successfully')
         else:
             print("Please login first.")
 
@@ -286,7 +304,10 @@ class Library():
                             new_list = copy.deepcopy(self.books[j])
                             new_list.insert(0, self.active_user[1][0])
                             new_list[5] = 1
+                            curr_date = date.today()
+                            new_list.append(curr_date)
                             self.books_history.append(new_list)
+
                         else:
                             print("Book Out of Stock!")
                     else:
@@ -297,7 +318,8 @@ class Library():
         else:
             print("Please Login First.")
 
-    columns = ['Email', 'BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year']
+    columns = ['Email', 'BookID', 'Book Title', 'Author', 'Pages', 'No. of copies', 'ISBN', 'Published Year',
+               'Date of issue']
 
     def mybookshistory(self):
         if self.active_user[1][2] == "Admin" or self.active_user[1][2] == 'Borrower':
@@ -410,11 +432,15 @@ class Library():
             yel = int(input("Enter the Id of Book to return: "))
             for i in range(len(self.books_history)):
                 if yel in self.books_history[i] and self.active_user[1][0] in self.books_history[i]:
-                    print(self.books_history[i])
+                    print(self.books_history[i][0:8])
                     inpde = input("Do you want to return this book? Y/N: ")
                     if inpde.lower() == 'y':
-                        self.books_history.pop(i)
-                        print("You have successfully returned the book")
+                        if self.currentdate() < self.books_history[i][-1] + timedelta(days=14):
+                            self.books_history.pop(i)
+                            print("You have successfully returned the book")
+                        else:
+                            print("You are late! You are fined ₹100 for late submission.")
+                            self.books_history.pop(i)
                     else:
                         print("No worries!")
                     break
